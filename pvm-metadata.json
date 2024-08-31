@@ -1,0 +1,10 @@
+{
+  "name": "pvm-shell",
+  "version": "0.0.1-debug",
+  "capabilities": {
+    "resetJAM": false,
+    "resetGeneric": true,
+    "resetPolkaVM": false
+  },
+  "wasmBlobUrl": "./pkg/pvm_shell_bg.wasm"
+}
