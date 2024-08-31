@@ -1,0 +1,17 @@
+{
+  "name": "pvm-shell",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "pvm_shell_bg.wasm",
+    "pvm_shell.js",
+    "pvm_shell_bg.js",
+    "pvm_shell.d.ts"
+  ],
+  "main": "pvm_shell.js",
+  "types": "pvm_shell.d.ts",
+  "sideEffects": [
+    "./pvm_shell.js",
+    "./snippets/*"
+  ]
+}
