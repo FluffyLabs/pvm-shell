@@ -8,10 +8,12 @@ use wasm_bindgen::prelude::wasm_bindgen;
 #[wasm_bindgen]
 #[derive(Copy, Clone)]
 pub enum Status {
-    Ok = 0,
-    Halt = 1,
-    Panic = 2,
-    OutOfGas = 3,
+    Ok = 255,
+    Halt = 0,
+    Panic = 1,
+    Fault = 2,
+    Host = 3,
+    OutOfGas = 4,
 }
 
 static PVM: Mutex<Option<Pvm>> = Mutex::new(None);
@@ -59,8 +61,22 @@ where
     }
 }
 
+
+#[deprecated = "Use setGasLeft / setNextProgramCounter instead."]
+#[wasm_bindgen]
+pub fn resume(pc: u32, gas: i64) {
+    setNextProgramCounter(pc);
+    setGasLeft(gas);
+}
+
+#[deprecated = "Use resetGeneric instead"]
 #[wasm_bindgen]
 pub fn reset(program: Vec<u8>, registers: Vec<u8>, gas: i64) {
+    resetGeneric(program, registers, gas)
+}
+
+#[wasm_bindgen]
+pub fn resetGeneric(program: Vec<u8>, registers: Vec<u8>, gas: i64) {
     *PVM.lock().unwrap() = Some(Pvm::new(program, registers, gas));
 }
 
@@ -75,13 +91,28 @@ pub fn getProgramCounter() -> u32 {
 }
 
 #[wasm_bindgen]
+pub fn setNextProgramCounter(pc: u32) {
+    with_pvm(|pvm| pvm.pc = pc, ());
+}
+
+#[wasm_bindgen]
 pub fn getStatus() -> Status {
     with_pvm(|pvm| pvm.status, Status::Ok)
 }
 
 #[wasm_bindgen]
+pub fn getExitArg() -> u32 {
+    0
+}
+
+#[wasm_bindgen]
 pub fn getGasLeft() -> i64 {
     with_pvm(|pvm| pvm.gas, 0)
+}
+
+#[wasm_bindgen]
+pub fn setGasLeft(gas: i64) {
+    with_pvm(|pvm| pvm.gas = gas, ());
 }
 
 #[wasm_bindgen]
