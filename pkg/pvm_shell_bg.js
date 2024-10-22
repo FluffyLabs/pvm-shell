@@ -3,6 +3,13 @@ export function __wbg_set_wasm(val) {
     wasm = val;
 }
 
+/**
+* @param {number} pc
+* @param {bigint} gas
+*/
+export function resume(pc, gas) {
+    wasm.resume(pc, gas);
+}
 
 let cachedUint8ArrayMemory0 = null;
 
@@ -35,6 +42,19 @@ export function reset(program, registers, gas) {
 }
 
 /**
+* @param {Uint8Array} program
+* @param {Uint8Array} registers
+* @param {bigint} gas
+*/
+export function resetGeneric(program, registers, gas) {
+    const ptr0 = passArray8ToWasm0(program, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ptr1 = passArray8ToWasm0(registers, wasm.__wbindgen_malloc);
+    const len1 = WASM_VECTOR_LEN;
+    wasm.resetGeneric(ptr0, len0, ptr1, len1, gas);
+}
+
+/**
 * @returns {boolean}
 */
 export function nextStep() {
@@ -51,6 +71,13 @@ export function getProgramCounter() {
 }
 
 /**
+* @param {number} pc
+*/
+export function setNextProgramCounter(pc) {
+    wasm.setNextProgramCounter(pc);
+}
+
+/**
 * @returns {Status}
 */
 export function getStatus() {
@@ -59,11 +86,26 @@ export function getStatus() {
 }
 
 /**
+* @returns {number}
+*/
+export function getExitArg() {
+    const ret = wasm.getExitArg();
+    return ret >>> 0;
+}
+
+/**
 * @returns {bigint}
 */
 export function getGasLeft() {
     const ret = wasm.getGasLeft();
     return ret;
+}
+
+/**
+* @param {bigint} gas
+*/
+export function setGasLeft(gas) {
+    wasm.setGasLeft(gas);
 }
 
 let cachedDataViewMemory0 = null;
@@ -116,5 +158,5 @@ export function getPageDump(index) {
 
 /**
 */
-export const Status = Object.freeze({ Ok:0,"0":"Ok",Halt:1,"1":"Halt",Panic:2,"2":"Panic",OutOfGas:3,"3":"OutOfGas", });
+export const Status = Object.freeze({ Ok:255,"255":"Ok",Halt:0,"0":"Halt",Panic:1,"1":"Panic",Fault:2,"2":"Fault",Host:3,"3":"Host",OutOfGas:4,"4":"OutOfGas", });
 
